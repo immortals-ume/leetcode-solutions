@@ -1,10 +1,8 @@
 class Solution {
     public int appendCharacters(String s, String t) {
         int i = 0, j = 0;
-        int sLen = s.length(), tLen = t.length();
-        
-        // Traverse through `s` and `t`
-        while (i < sLen && j < tLen) {
+// Traverse through `s` and `t`
+        while (i <  s.length() && j < t.length()) {
             if (s.charAt(i) == t.charAt(j)) {
                 j++;
             }
@@ -12,6 +10,7 @@ class Solution {
         }
         
         // The number of characters in `t` that haven't been matched
-        return tLen - j;
+        int val=t.length()-j;
+        return val>0?val:0;
     }
 }
