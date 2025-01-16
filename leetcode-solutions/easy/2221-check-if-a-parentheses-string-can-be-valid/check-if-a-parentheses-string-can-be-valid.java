@@ -1,54 +1,34 @@
 class Solution {
     public boolean canBeValid(String s, String locked) {
-         // If the length of s is odd, it's impossible to balance the parentheses
+  // A valid parentheses string must have even length
         if (s.length() % 2 != 0) {
             return false;
         }
-        
-        // Forward pass
-        int balance = 0, flexible = 0;
+
+        // Forward pass: Check if valid left-to-right
+        int minOpen = 0, maxOpen = 0;
         for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
             if (locked.charAt(i) == '0') {
-                flexible++;
-            } else if (s.charAt(i) == '(') {
-                balance++;
-            } else { // s[i] == ')'
-                balance--;
+                // Flexible character: Could be '(' or ')'
+                minOpen = Math.max(0, minOpen - 1);
+                maxOpen++;
+            } else if (c == '(') {
+                // Fixed '('
+                minOpen++;
+                maxOpen++;
+            } else { // c == ')'
+                // Fixed ')'
+                minOpen = Math.max(0, minOpen - 1);
+                maxOpen--;
             }
-            // If balance is negative, use a flexible character to balance
-            if (balance < 0) {
-                if (flexible > 0) {
-                    flexible--;
-                    balance++;
-                } else {
-                    return false;
-                }
+            // If maxOpen < 0, too many unmatched ')'
+            if (maxOpen < 0) {
+                return false;
             }
         }
 
-        // Backward pass
-        balance = 0;
-        flexible = 0;
-        for (int i = s.length() - 1; i >= 0; i--) {
-            if (locked.charAt(i) == '0') {
-                flexible++;
-            } else if (s.charAt(i) == ')') {
-                balance++;
-            } else { // s[i] == '('
-                balance--;
-            }
-            // If balance is negative, use a flexible character to balance
-            if (balance < 0) {
-                if (flexible > 0) {
-                    flexible--;
-                    balance++;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        // If both passes succeeded, the string can be made valid
-        return true;
+        // If minOpen > 0 after forward pass, it's invalid
+        return minOpen == 0;
     }
 }
