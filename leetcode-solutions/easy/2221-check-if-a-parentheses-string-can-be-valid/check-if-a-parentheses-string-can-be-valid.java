@@ -1,34 +1,45 @@
 class Solution {
     public boolean canBeValid(String s, String locked) {
-  // A valid parentheses string must have even length
+     // A valid parentheses string must have even length
         if (s.length() % 2 != 0) {
             return false;
         }
 
-        // Forward pass: Check if valid left-to-right
-        int minOpen = 0, maxOpen = 0;
+        Stack<Integer> openStack = new Stack<>();
+        Stack<Integer> flexibleStack = new Stack<>();
+
+        // Traverse the string
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (locked.charAt(i) == '0') {
-                // Flexible character: Could be '(' or ')'
-                minOpen = Math.max(0, minOpen - 1);
-                maxOpen++;
+                // Flexible character, push its index onto the flexible stack
+                flexibleStack.push(i);
             } else if (c == '(') {
-                // Fixed '('
-                minOpen++;
-                maxOpen++;
+                // Fixed '(', push its index onto the open stack
+                openStack.push(i);
             } else { // c == ')'
-                // Fixed ')'
-                minOpen = Math.max(0, minOpen - 1);
-                maxOpen--;
-            }
-            // If maxOpen < 0, too many unmatched ')'
-            if (maxOpen < 0) {
-                return false;
+                if (!openStack.isEmpty()) {
+                    // Use a fixed '(' to balance this ')'
+                    openStack.pop();
+                } else if (!flexibleStack.isEmpty()) {
+                    // Use a flexible character to balance this ')'
+                    flexibleStack.pop();
+                } else {
+                    // No matching '(' or flexible character available
+                    return false;
+                }
             }
         }
 
-        // If minOpen > 0 after forward pass, it's invalid
-        return minOpen == 0;
+        // Handle remaining unmatched '('
+        while (!openStack.isEmpty() && !flexibleStack.isEmpty()) {
+            // Ensure flexible indices can balance open indices
+            if (flexibleStack.pop() < openStack.pop()) {
+                return false; // Invalid if flexible cannot match an open parenthesis
+            }
+        }
+
+        // Return true if all '(' are matched; otherwise, false
+        return openStack.isEmpty();
     }
 }
