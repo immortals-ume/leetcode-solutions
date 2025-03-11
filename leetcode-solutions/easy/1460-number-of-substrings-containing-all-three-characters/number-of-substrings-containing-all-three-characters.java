@@ -1,16 +1,14 @@
 class Solution {
     public int numberOfSubstrings(String s) {
-                int[] count = new int[3]; // To store frequency of 'a', 'b', 'c'
-        int l = 0, result = 0;
+        int[] lastSeen = { -1, -1, -1 }; // Track last seen index of 'a', 'b', 'c'
+        int result = 0;
         
         for (int r = 0; r < s.length(); r++) {
-            count[s.charAt(r) - 'a']++; // Expand window
+            lastSeen[s.charAt(r) - 'a'] = r; // Update last seen index
             
-            while (count[0] > 0 && count[1] > 0 && count[2] > 0) { // Valid substring
-                result += s.length() - r; // Count all substrings starting at l
-                count[s.charAt(l) - 'a']--; // Shrink window
-                l++;
-            }
+            // Smallest last seen index gives the earliest valid starting position
+            int minIndex = Math.min(lastSeen[0], Math.min(lastSeen[1], lastSeen[2]));
+            result += (minIndex + 1); // Count substrings ending at r
         }
         
         return result;
