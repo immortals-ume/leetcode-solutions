@@ -4,8 +4,9 @@
  * @return {number[]}
  */
 var map = function(arr, fn) {
-    return arr.reduce((transformedArr, element, index) => {
-    transformedArr[index] = fn(element, index);
-    return transformedArr;
-  }, []);
+       const newArr = [];
+    for(let i = 0; i < arr.length; i++){
+        newArr.push(fn(arr[i], i))
+    }
+    return newArr
 };
