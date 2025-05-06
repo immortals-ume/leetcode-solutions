@@ -1,42 +1,60 @@
 class MyQueue {
-private Stack<Integer> stackIn;
-    private Stack<Integer> stackOut;
+private Stack<Integer> stack;
 
     public MyQueue() {
-        stackIn = new Stack<>();
-        stackOut = new Stack<>();
+        stack = new Stack<>();
     }
 
     // Push element x to the back of queue
     public void push(int x) {
-        stackIn.push(x);  // Always O(1)
+        stack.push(x); // O(1) operation
     }
 
-    // Removes the element from the front of queue and returns that element
+    // Removes the element from in front of queue and returns that element
     public int pop() {
-        // Transfer elements only when stackOut is empty
-        if (stackOut.isEmpty()) {
-            while (!stackIn.isEmpty()) {
-                stackOut.push(stackIn.pop()); // O(n) transfer, but only done once
-            }
+        if (stack.isEmpty()) {
+            throw new IllegalStateException("Queue is empty");
         }
-        return stackOut.pop();  // O(1)
+        return popHelper(stack);
+    }
+
+    // Helper function to reverse the stack and pop the front element
+    private int popHelper(Stack<Integer> stack) {
+        // Base case: if only one element is left, return it
+        if (stack.size() == 1) {
+            return stack.pop();
+        }
+        // Recursively pop elements
+        int top = stack.pop();
+        int res = popHelper(stack);
+        stack.push(top); // Put the elements back after popping the front one
+        return res;
     }
 
     // Get the front element
     public int peek() {
-        // Transfer elements only when stackOut is empty
-        if (stackOut.isEmpty()) {
-            while (!stackIn.isEmpty()) {
-                stackOut.push(stackIn.pop());  // O(n) transfer, but only done once
-            }
+        if (stack.isEmpty()) {
+            throw new IllegalStateException("Queue is empty");
         }
-        return stackOut.peek();  // O(1)
+        return peekHelper(stack);
+    }
+
+    // Helper function to reverse the stack and peek the front element
+    private int peekHelper(Stack<Integer> stack) {
+        // Base case: if only one element is left, return it
+        if (stack.size() == 1) {
+            return stack.peek();
+        }
+        // Recursively pop elements
+        int top = stack.pop();
+        int res = peekHelper(stack);
+        stack.push(top); // Put the elements back after peeking the front one
+        return res;
     }
 
     // Returns whether the queue is empty
     public boolean empty() {
-        return stackIn.isEmpty() && stackOut.isEmpty();
+        return stack.isEmpty();
     }
 }
 
