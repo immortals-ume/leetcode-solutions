@@ -2,62 +2,35 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 class MyStack {
-    private Queue<Integer> queue1;
-    private Queue<Integer> queue2;
+   private Queue<Integer> queue;
 
     public MyStack() {
-        queue1 = new LinkedList<>();
-        queue2 = new LinkedList<>();
+        queue = new LinkedList<>();
     }
 
     // Push element x onto stack
     public void push(int x) {
-        queue1.offer(x);  // O(1)
+        queue.offer(x);
+        int size = queue.size();
+        // Rotate the queue to move the new element to the front
+        for (int i = 1; i < size; i++) {
+            queue.offer(queue.poll());
+        }
     }
 
-    // Removes the element on the top of the stack and returns that element
+    // Removes the element on top of the stack and returns it
     public int pop() {
-        // Move all but the last element from queue1 to queue2
-        while (queue1.size() > 1) {
-            queue2.offer(queue1.poll());
-        }
-        // The last element in queue1 is the top of the stack
-        int top = queue1.poll();
-        
-        // Swap the references of the queues
-        Queue<Integer> temp = queue1;
-        queue1 = queue2;
-        queue2 = temp;
-        
-        return top;  // O(n) for the movement of elements, O(1) for the poll
+        return queue.poll(); // Front of queue is top of stack
     }
 
     // Get the top element
     public int top() {
-        // Move all but the last element from queue1 to queue2
-        while (queue1.size() > 1) {
-            queue2.offer(queue1.poll());
-        }
-        int top = 0;
-
-        // The last element in queue1 is the top of the stack
-        if(!queue1.isEmpty())
-            top = queue1.peek();
-        
-        // Move it to queue2 to maintain the stack order
-        queue2.offer(queue1.poll());
-        
-        // Swap the references of the queues
-        Queue<Integer> temp = queue1;
-        queue1 = queue2;
-        queue2 = temp;
-        
-        return top;  // O(n) for the movement of elements, O(1) for the peek
+        return queue.peek(); // Front of queue is top of stack
     }
 
     // Returns whether the stack is empty
     public boolean empty() {
-        return queue1.isEmpty();
+        return queue.isEmpty();
     }
 }
 /**
