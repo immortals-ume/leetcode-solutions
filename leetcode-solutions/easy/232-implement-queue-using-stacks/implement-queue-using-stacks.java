@@ -1,45 +1,42 @@
 class MyQueue {
-
-        private Stack<Integer> stack1;
-    private Stack<Integer> stack2;
+private Stack<Integer> stackIn;
+    private Stack<Integer> stackOut;
 
     public MyQueue() {
-        stack1 = new Stack<>();
-        stack2 = new Stack<>();
+        stackIn = new Stack<>();
+        stackOut = new Stack<>();
     }
-    
-    // Push element x to the back of the queue
+
+    // Push element x to the back of queue
     public void push(int x) {
-        stack1.push(x);
+        stackIn.push(x);  // Always O(1)
     }
-    
-    // Removes the element from the front of the queue and returns it
+
+    // Removes the element from the front of queue and returns that element
     public int pop() {
-        // Move elements from stack1 to stack2 if stack2 is empty
-        if (stack2.isEmpty()) {
-            while (!stack1.isEmpty()) {
-                stack2.push(stack1.pop());
+        // Transfer elements only when stackOut is empty
+        if (stackOut.isEmpty()) {
+            while (!stackIn.isEmpty()) {
+                stackOut.push(stackIn.pop()); // O(n) transfer, but only done once
             }
         }
-        // Pop the front element from stack2
-        return stack2.pop();
+        return stackOut.pop();  // O(1)
     }
-    
+
     // Get the front element
     public int peek() {
-        // Move elements from stack1 to stack2 if stack2 is empty
-        if (stack2.isEmpty()) {
-            while (!stack1.isEmpty()) {
-                stack2.push(stack1.pop());
+        // Transfer elements only when stackOut is empty
+        if (stackOut.isEmpty()) {
+            while (!stackIn.isEmpty()) {
+                stackOut.push(stackIn.pop());  // O(n) transfer, but only done once
             }
         }
-        // Peek the front element from stack2
-        return stack2.peek();
+        return stackOut.peek();  // O(1)
     }
-    
-    // Return whether the queue is empty
+
+    // Returns whether the queue is empty
     public boolean empty() {
-        return stack1.isEmpty() && stack2.isEmpty();
+        return stackIn.isEmpty() && stackOut.isEmpty();
     }
 }
 
