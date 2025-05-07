@@ -1,53 +1,26 @@
 class CustomStack {
 
-private int maxSize;  // Maximum size of the stack
-    private int[] stack;  // Stack to hold the elements
-    private int[] increment;  // Array to track increments for each element
-    
+ int[] arr;
+    int top;
     public CustomStack(int maxSize) {
-        this.maxSize = maxSize;
-        this.stack = new int[maxSize];  // Stack initialization
-        this.increment = new int[maxSize];  // Increment array initialization
+        arr=new int[maxSize];
+        top=-1;
     }
     
-    // Pushes the element to the stack if it's not full
     public void push(int x) {
-        if (getSize() < maxSize) {
-            stack[getSize()] = x;
-        }
+        if(top<arr.length-1) arr[++top]=x;
     }
     
-    // Pops and returns the top element from the stack or -1 if the stack is empty
     public int pop() {
-        if (getSize() == 0) {
-            return -1;  // If the stack is empty, return -1
-        }
-        
-        int topIndex = getSize() - 1;
-        int value = stack[topIndex] + increment[topIndex];  // Add the increment value
-        if (topIndex > 0) {
-            increment[topIndex - 1] += increment[topIndex];  // Propagate the increment to the next element
-        }
-        increment[topIndex] = 0;  // Reset the increment for the current element
-        stack[topIndex] = 0;  // Clear the top element
-        return value;
+        if(top>-1) return arr[top--];
+        return -1;
     }
     
-    // Increments the bottom k elements of the stack by val
     public void increment(int k, int val) {
-        int limit = Math.min(k, getSize());  // Limit the increment to the current stack size
-        if (limit > 0) {
-            increment[limit - 1] += val;  // Apply the increment to the (k-1)th index
+        int min=Math.min(k,arr.length);
+        for(int i=0;i<min;i++){
+            arr[i]+=val;
         }
-    }
-    
-    // Helper method to get the current size of the stack
-    private int getSize() {
-        int size = 0;
-        while (size < maxSize && stack[size] != 0) {
-            size++;
-        }
-        return size;
     }
 }
 
