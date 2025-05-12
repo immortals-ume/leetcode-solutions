@@ -1,43 +1,32 @@
 class Solution {
     public int[] findEvenNumbers(int[] digits) {
-        Set<Integer> result = new TreeSet<>();
-        int[] count = new int[10];
+               Set<Integer> result = new TreeSet<>();
+        int n = digits.length;
 
-        // Count frequency of each digit
-        for (int digit : digits) {
-            count[digit]++;
-        }
+        for (int i = 0; i < n; i++) {
+            if (digits[i] == 0) continue; // Skip leading zero
 
-        // Try every 3-digit number from 100 to 998
-        for (int i = 100; i <= 999; i += 2) { // step by 2 since it must be even
-            int a = i / 100;
-            int b = (i / 10) % 10;
-            int c = i % 10;
+            for (int j = 0; j < n; j++) {
+                if (j == i) continue;
 
-            int[] tempCount = new int[10];
-            tempCount[a]++;
-            tempCount[b]++;
-            tempCount[c]++;
+                for (int k = 0; k < n; k++) {
+                    if (k == i || k == j) continue;
 
-            boolean valid = true;
-            for (int d = 0; d <= 9; d++) {
-                if (tempCount[d] > count[d]) {
-                    valid = false;
-                    break;
+                    int num = digits[i] * 100 + digits[j] * 10 + digits[k];
+                    if (num % 2 == 0) {
+                        result.add(num);
+                    }
                 }
             }
-
-            if (valid) {
-                result.add(i);
-            }
         }
 
-        // Convert result set to array
+        // Convert set to array
         int[] res = new int[result.size()];
         int idx = 0;
         for (int num : result) {
             res[idx++] = num;
         }
+
         return res;
     }
 }
